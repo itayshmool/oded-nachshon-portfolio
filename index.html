@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oded Nachshon — Tech Leadership & Innovation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #141414;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --accent-cyan: #00ffff;
+            --accent-magenta: #ff00ff;
+            --accent-yellow: #ffff00;
+            --grid-color: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: 1;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Grid background */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            padding: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.2); opacity: 0.15; }
+        }
+
+        .hero-eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .hero-name {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-title strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        .btn {
+            font-family: 'Space Mono', monospace;
+            padding: 1rem 2rem;
+            border: 2px solid var(--text-primary);
+            background: transparent;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-cyan);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            color: var(--bg-dark);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-secondary {
+            border-color: var(--text-secondary);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary::before {
+            background: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-primary);
+            color: var(--bg-dark);
+        }
+
+        /* Section styling */
+        .section {
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .section-diagonal {
+            transform: skewY(-3deg);
+            background: var(--bg-card);
+            margin: 4rem 0;
+            padding: 6rem 2rem;
+        }
+
+        .section-diagonal > * {
+            transform: skewY(3deg);
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+        }
+
+        /* Experience Cards */
+        .experience-grid {
+            display: grid;
+            gap: 2rem;
+            max-width: 900px;
+        }
+
+        .experience-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-left: 4px solid var(--accent-cyan);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .experience-card:hover {
+            transform: translateX(10px);
+            box-shadow: -10px 10px 0 rgba(0, 255, 255, 0.2);
+        }
+
+        .experience-card::before {
+            content: '//';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-family: 'Space Mono', monospace;
+            color: var(--accent-cyan);
+            opacity: 0.3;
+            font-size: 1.5rem;
+        }
+
+        .experience-role {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-company {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .experience-period {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .experience-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+        }
+
+        .skill-category {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-top: 3px solid var(--accent-magenta);
+            position: relative;
+        }
+
+        .skill-category-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--accent-magenta);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--accent-magenta);
+            color: var(--bg-dark);
+            border-color: var(--accent-magenta);
+            transform: translateY(-2px);
+        }
+
+        /* About Section */
+        .about-content {
+            max-width: 800px;
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+
+        .about-content strong {
+            color: var(--accent-yellow);
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            max-width: 800px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta), var(--accent-yellow));
+        }
+
+        .stat-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        /* Contact Section */
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 600px;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            text-decoration: none;
+            color: var(--text-primary);
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            border-left-color: var(--accent-yellow);
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-icon {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--accent-yellow);
+            min-width: 40px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-value {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-accent {
+            color: var(--accent-cyan);
+        }
+
+        /* Scroll reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .section {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-diagonal {
+                padding: 4rem 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Decorative elements */
+        .deco-line {
+            position: fixed;
+            width: 2px;
+            height: 100vh;
+            background: linear-gradient(180deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0.3;
+            right: 10%;
+            top: 0;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .deco-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="deco-line"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-eyebrow">Tech Leadership • Innovation • R&D</div>
+            <h1 class="hero-name">ODED<br>NACHSHON</h1>
+            <p class="hero-title">
+                Head of <strong>Wix Editor</strong> & <strong>Media R&D</strong><br>
+                Building the future of web creation
+            </p>
+            <div class="hero-cta">
+                <a href="#contact" class="btn">Get in Touch</a>
+                <a href="#experience" class="btn btn-secondary">View Resume</a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section reveal" id="about">
+            <h2 class="section-title">About</h2>
+            <div class="about-content">
+                <p>
+                    A <strong>technology leader</strong> passionate about building innovative products that empower millions of users worldwide.
+                    Currently leading R&D efforts at Wix, driving the evolution of the <strong>Wix Editor</strong> and <strong>Media platform</strong>
+                    — two critical systems that power website creation for millions globally.
+                </p>
+                <p style="margin-top: 1.5rem;">
+                    From <strong>founding startups</strong> as CTO to leading large-scale engineering organizations,
+                    I specialize in transforming ambitious visions into production-grade systems. My work spans
+                    <strong>AI-powered design tools</strong>, media processing at scale, video streaming infrastructure, and advertising technology.
+                </p>
+                <p style="margin-top: 1.5rem; color: var(--text-primary);">
+                    Currently championing <strong>AI integration</strong> in web creation tools, including GPT-3 powered text generation
+                    and intelligent theme assistants that democratize professional design for everyone.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Connections</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    <span class="stat-label">Years Exp</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Startups Founded</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Users Impacted</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <div class="section-diagonal">
+            <section class="section reveal" id="experience" style="padding: 0;">
+                <h2 class="section-title">Experience</h2>
+                <div class="experience-grid">
+                    <div class="experience-card">
+                        <div class="experience-role">Head of Wix Editor</div>
+                        <div class="experience-company">Wix.com · Tel Aviv, Israel</div>
+                        <div class="experience-period">January 2017 — Present · 8+ Years</div>
+                        <div class="experience-description">
+                            Leading the product and engineering teams behind Wix's flagship editor platform,
+                            empowering millions of users to create stunning websites. Spearheading AI integration
+                            including GPT-3 powered text generation and intelligent theme assistants. Managing the
+                            Wix Editor Platform that processes billions of design operations monthly.
+                        </div>
+                    </div>
+
+                    <div class="experience-card">
+                        <div class="experience-role">Head of Wix Media R&D Group</div>
+                        <div class="experience-company">Wix.com · Tel Aviv, Israel</div>
+                        <div class="experience-period">January 2017 — Present · 8+ Years</div>
+                        <div class="experience-description">
+                            Overseeing research and development for Wix's media infrastructure, powering image
+                            processing, video streaming, and CDN delivery at massive global scale. Building systems
+                            that serve billions of media assets with sub-second latency. Leading innovation in
+                            automated image optimization and next-gen video codecs.
+                        </div>
+                    </div>
+
+                    <div class="experience-card">
+                        <div class="experience-role">VP of Research & Development</div>
+                        <div class="experience-company">Vidmind · Israel</div>
+                        <div class="experience-period">2014 — 2017 · 3 Years</div>
+                        <div class="experience-description">
+                            Led engineering for Over-The-Top (OTT) video platform serving operators, broadcasters,
+                            and retailers. Built scalable video processing pipelines and real-time streaming
+                            infrastructure. Managed cross-functional teams across backend, mobile, and web.
+                            Drove technical strategy for enterprise video solutions.
+                        </div>
+                    </div>
+
+                    <div class="experience-card">
+                        <div class="experience-role">CTO & Co-Founder</div>
+                        <div class="experience-company">Adstrix · Israel</div>
+                        <div class="experience-period">2011 — 2014 · 3 Years</div>
+                        <div class="experience-description">
+                            Co-founded programmatic advertising exchange for print media (newspapers & magazines).
+                            Built the entire technical platform from zero to production, including real-time bidding
+                            system, Nielsen Scarborough data integration, and publisher dashboard. Raised $550K seed funding.
+                            Established engineering culture and technical vision.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Education Section -->
+        <section class="section reveal" id="education">
+            <h2 class="section-title">Education</h2>
+            <div class="experience-grid" style="max-width: 700px;">
+                <div class="experience-card" style="border-left-color: var(--accent-magenta);">
+                    <div class="experience-role" style="color: var(--accent-magenta);">BSc in Computer Science</div>
+                    <div class="experience-company">The Academic College of Tel Aviv-Yaffo</div>
+                    <div class="experience-period">Tel Aviv, Israel</div>
+                    <div class="experience-description">
+                        Strong foundation in computer science fundamentals: algorithms, data structures,
+                        software engineering, operating systems, and distributed computing. Specialized coursework
+                        in systems architecture and performance optimization.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="section reveal" id="skills">
+            <h2 class="section-title">Expertise</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <div class="skill-category-title">Leadership</div>
+                    <span class="skill-tag">Engineering Management</span>
+                    <span class="skill-tag">Team Building</span>
+                    <span class="skill-tag">Product Strategy</span>
+                    <span class="skill-tag">Technical Vision</span>
+                    <span class="skill-tag">Scaling Teams</span>
+                </div>
+
+                <div class="skill-category">
+                    <div class="skill-category-title">Technical</div>
+                    <span class="skill-tag">System Architecture</span>
+                    <span class="skill-tag">Distributed Systems</span>
+                    <span class="skill-tag">Cloud Infrastructure</span>
+                    <span class="skill-tag">Media Processing</span>
+                    <span class="skill-tag">Web Technologies</span>
+                    <span class="skill-tag">AI/ML Integration</span>
+                </div>
+
+                <div class="skill-category">
+                    <div class="skill-category-title">Domains</div>
+                    <span class="skill-tag">Web Editors</span>
+                    <span class="skill-tag">Content Management</span>
+                    <span class="skill-tag">Media Platforms</span>
+                    <span class="skill-tag">Video Tech</span>
+                    <span class="skill-tag">AdTech</span>
+                    <span class="skill-tag">SaaS Products</span>
+                </div>
+
+                <div class="skill-category">
+                    <div class="skill-category-title">Innovation</div>
+                    <span class="skill-tag">R&D Strategy</span>
+                    <span class="skill-tag">Emerging Tech</span>
+                    <span class="skill-tag">AI-Powered Tools</span>
+                    <span class="skill-tag">User Experience</span>
+                    <span class="skill-tag">Performance</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section reveal" id="contact">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/odednachshon/" target="_blank" class="contact-link">
+                    <div class="contact-icon">⟶</div>
+                    <div class="contact-info">
+                        <div class="contact-label">LinkedIn</div>
+                        <div class="contact-value">linkedin.com/in/odednachshon</div>
+                    </div>
+                </a>
+
+                <a href="mailto:o***@wix.com" class="contact-link">
+                    <div class="contact-icon">✉</div>
+                    <div class="contact-info">
+                        <div class="contact-label">Email</div>
+                        <div class="contact-value">Professional Inquiries</div>
+                    </div>
+                </a>
+
+                <a href="https://www.wix.com" target="_blank" class="contact-link">
+                    <div class="contact-icon">◆</div>
+                    <div class="contact-info">
+                        <div class="contact-label">Company</div>
+                        <div class="contact-value">Wix.com</div>
+                    </div>
+                </a>
+
+                <div class="contact-link" style="pointer-events: none; opacity: 0.7;">
+                    <div class="contact-icon">◉</div>
+                    <div class="contact-info">
+                        <div class="contact-label">Location</div>
+                        <div class="contact-value">Tel Aviv, Israel</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                © 2026 Oded Nachshon · Built with passion for <span class="footer-accent">innovation</span> and <span class="footer-accent">technology</span>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.75rem;">
+                Leading the future of web creation at Wix
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const revealPoint = windowHeight * 0.85;
+
+                if (elementTop < revealPoint) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        // Initial check
+        revealOnScroll();
+
+        // Throttled scroll listener
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    revealOnScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect on hero
+        const hero = document.querySelector('.hero');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.4}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+        });
+
+        // Add touch feedback for mobile
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.btn, .contact-link, .skill-tag').forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                element.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                });
+            });
+        }
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+
+            if (konamiCode.join(',') === konamiSequence.join(',')) {
+                document.body.style.animation = 'rainbow 2s linear infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 5000);
+            }
+        });
+
+        // Rainbow animation for easter egg
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
