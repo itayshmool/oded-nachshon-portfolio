@@ -12,7 +12,7 @@ A modern, distinctive portfolio website showcasing the career and expertise of O
 
 ## Live Site
 
-Visit the portfolio at: [https://[username].github.io/oded-nachshon-portfolio/](https://[username].github.io/oded-nachshon-portfolio/)
+Visit the portfolio at: [https://itayshmool.github.io/oded-nachshon-portfolio/](https://itayshmool.github.io/oded-nachshon-portfolio/)
 
 ## Local Development
 
